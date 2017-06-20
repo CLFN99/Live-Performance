@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Repository.Data
 {
-    public class CoalitieSqlContext
+    public class CoalitieSqlContext:ICoalitieSqlContext
     {
         
         public List<Coalitie> GetAll()
@@ -44,7 +44,18 @@ namespace Repository.Data
                     }
                 }
 
-                string queryCoalitie = "SELECT * FROM Coalitie";
+                foreach (Partij p in partijen)
+                {
+                    foreach (Lid l in leden)
+                    {
+                        if (l.PartijId == p.Id)
+                        {
+                            p.Leden.Add(l);
+                        }
+                    }
+                }
+
+                string queryCoalitie = "SELECT * FROM Coalitie c INNER JOIN Coalitie_Partij CP ON c.CoalitieID = CP.CoalitieID INNER JOIN Partij P ON P.PartijID = CP.PartijID";
                 using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))
                 {
                     using (SqlDataReader r = cmd.ExecuteReader())
@@ -102,7 +113,7 @@ namespace Repository.Data
                     }
                 }
 
-                string queryCoalitie = "SELECT C.CoalitieID, C.Naam, C.PremierID FROM Coalitie C INNER JOIN Coalitie_Partij CP ON CP.PartijID = Aid";
+                string queryCoalitie = "SELECT * FROM Coalitie c INNER JOIN Coalitie_Partij CP ON c.CoalitieID = CP.CoalitieID INNER JOIN Partij P ON P.PartijID = CP.PartijID WHERE C.CoalitieID = @id";
                 using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))
                 {
                     using (SqlDataReader r = cmd.ExecuteReader())
@@ -110,7 +121,7 @@ namespace Repository.Data
                         cmd.Parameters.AddWithValue("@id", id);
                         while (r.Read())
                         {
-                            c = CreateCoalitieFromReader(r, partijen);
+                            return CreateCoalitieFromReader(r, partijen);
                         }
                     }
                 }
@@ -173,7 +184,15 @@ namespace Repository.Data
 
         private Coalitie CreateCoalitieFromReader(SqlDataReader r, List<Partij> partijen)
         {
-            return new Coalitie(Convert.ToInt32(r["CoalitieID"]), r["Naam"].ToString(), Convert.ToInt32(r["PremierID"]), partijen);
+            List<Partij> coalitiePartijen = new List<Partij>();
+            foreach (Partij p in partijen)
+            {
+                if (p.Id == Convert.ToInt32(r["PartijID"]))
+                {
+                    coalitiePartijen.Add(p);
+                }
+            }
+            return new Coalitie(Convert.ToInt32(r["CoalitieID"]), r["Naam"].ToString(), Convert.ToInt32(r["PremierID"]), coalitiePartijen);
         }
     }
 }

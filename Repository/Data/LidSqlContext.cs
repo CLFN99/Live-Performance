@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Repository.Data
 {
-    public class LidSqlContext
+    public class LidSqlContext : ILidSqlContext
     {
         public List<Lid> GetAll()
         {
@@ -76,14 +76,15 @@ namespace Repository.Data
             try
             {
                 Database.Conn.Open();
-                string query = "SELECT * FROM Lid";
+                string query = "INSERT INTO Lid(Naam, PartijID) VALUES (@Naam, @partijid) ";
                 using (SqlCommand cmd = new SqlCommand(query, Database.Conn))
                 {
                     cmd.Parameters.AddWithValue("@Naam", l.Naam);
                     cmd.Parameters.AddWithValue("@PartijId", l.PartijId);
                     cmd.ExecuteNonQuery();
-                    return true;
                 }
+                
+                return true;
             }
             catch (Exception e)
             {

@@ -11,6 +11,7 @@ namespace Repository.Data
     {
         List<Partij> GetAll();
         Partij GetById(int id);
+        bool New(Partij p);
         bool Update(Partij p);
         bool Delete(Partij p);
 

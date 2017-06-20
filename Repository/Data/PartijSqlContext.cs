@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Repository.Data
 {
-    public class PartijSqlContext
+    public class PartijSqlContext : IPartijSqlContext
     {
         public List<Partij> GetAll()
         {
@@ -101,6 +101,32 @@ namespace Repository.Data
             return null;
         }
 
+        public bool New(Partij p)
+        {
+            try
+            {
+                Database.Conn.Open();
+                string query = "INSERT INTO Partij (Afkorting, Naam, Zetels, LijsttrekkerID) VALUES (@afk, @naam, @zetels, @lijsttrekker)";
+                using (SqlCommand cmd = new SqlCommand(query, Database.Conn))
+                {
+                    cmd.Parameters.AddWithValue("@afk", p.Afkorting);
+                    cmd.Parameters.AddWithValue("@naam", p.Naam);
+                    cmd.Parameters.AddWithValue("@zetels", p.Zetels);
+                    cmd.Parameters.AddWithValue("@lijsttrekker", p.LijsttrekkerId);
+                    cmd.ExecuteNonQuery();
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return false;
+            }
+            finally
+            {
+                Database.Conn.Close();
+            }
+        }
         public bool Update(Partij p)
         {
             try
