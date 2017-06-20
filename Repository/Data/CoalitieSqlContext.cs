@@ -162,7 +162,7 @@ namespace Repository.Data
 
         private Lid CreateLidFromReader(SqlDataReader r)
         {
-            return new Lid(Convert.ToInt32(r["LidID"]), r["Naam"].ToString());
+            return new Lid(Convert.ToInt32(r["LidID"]), r["Naam"].ToString(), Convert.ToInt32(r["PartijID"]));
         }
 
         private Partij CreatePartijFromReader(SqlDataReader r, List<Lid> leden)

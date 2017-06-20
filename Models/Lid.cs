@@ -8,20 +8,22 @@ namespace Models
 {
     public class Lid
     {
-        public int Id;
+        public int Id, PartijId;
         public string Naam;
 
         public Lid() { }
 
-        public Lid(int id, string naam)
+        public Lid(int id, string naam, int partijid)
         {
             Id = id;
             Naam = naam;
+            PartijId = partijid;
         }
 
-        public Lid(string naam)
+        public Lid(string naam, int partijid)
         {
             Naam = naam;
+            PartijId = partijid;
         }
     }
 }
