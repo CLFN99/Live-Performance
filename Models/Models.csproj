@@ -40,7 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Coalitie.cs" />
+    <Compile Include="Lid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Partij.cs" />
+    <Compile Include="Verkiezingssoort.cs" />
+    <Compile Include="Verkiezingsuitslag.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
