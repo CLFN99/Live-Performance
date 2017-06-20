@@ -45,14 +45,44 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
+    <Compile Include="Election.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Election.Designer.cs">
+      <DependentUpon>Election.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewElection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewElection.Designer.cs">
+      <DependentUpon>NewElection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Party.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Party.Designer.cs">
+      <DependentUpon>Party.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Election.resx">
+      <DependentUpon>Election.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewElection.resx">
+      <DependentUpon>NewElection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Party.resx">
+      <DependentUpon>Party.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
