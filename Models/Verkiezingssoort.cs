@@ -16,12 +16,17 @@ namespace Models
 
         public Verkiezingssoort(int id, string naam, int zetels, List<Partij> partijen)
         {
-
+            Id = id;
+            Zetels = zetels;
+            Naam = naam;
+            Partijen = partijen;
         }
 
         public Verkiezingssoort(string naam, int zetels, List<Partij> partijen)
         {
-
+            Zetels = zetels;
+            Naam = naam;
+            Partijen = partijen;
         }
     }
 }

@@ -17,22 +17,30 @@ namespace Models
         public Verkiezingsuitslag() { }
         public Verkiezingsuitslag(int id, string naam, DateTime datum, Verkiezingssoort soort, int totaal, List<Partij> partijen)
         {
-
+            Id = id;
+            Naam = naam;
+            Datum = datum;
+            Soort = soort;
+            Totaal = totaal;
+            Partijen = partijen;
         }
 
         public Verkiezingsuitslag(string naam, DateTime datum, Verkiezingssoort soort, int totaal, List<Partij> partijen)
         {
-
+            Naam = naam;
+            Datum = datum;
+            Soort = soort;
+            Totaal = totaal;
+            Partijen = partijen;
         }
 
-        public void ZetelsBerekenen()
+        public void ZetelsEnPercentageBerekenen()
         {
-
-        }
-
-        public void PercentageBerekenen()
-        {
-
+            foreach(Partij p in Partijen)
+            {
+                p.NieuweZetels = p.Stemmen / (Totaal * Soort.Zetels);
+                p.Percentage = (p.NieuweZetels / Soort.Zetels) * 100;
+            }
         }
     }
 }

@@ -40,11 +40,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\CoalitieSqlContext.cs" />
     <Compile Include="Data\Database.cs" />
+    <Compile Include="Data\ICoalitieSqlContext.cs" />
+    <Compile Include="Data\ILidSqlContext.cs" />
+    <Compile Include="Data\IPartijSqlContext.cs" />
+    <Compile Include="Data\IVerkiezingssoortSqlContext.cs" />
+    <Compile Include="Data\IVerkiezingsuitslagSqlContext.cs" />
+    <Compile Include="Data\LidSqlContext.cs" />
+    <Compile Include="Data\PartijSqlContext.cs" />
+    <Compile Include="Data\VerkiezingssoortSqlContext.cs" />
+    <Compile Include="Data\VerkiezingsuitslagSqlContext.cs" />
+    <Compile Include="Logic\CoalitieRepository.cs" />
+    <Compile Include="Logic\LidRepository.cs" />
+    <Compile Include="Logic\PartijRepository.cs" />
+    <Compile Include="Logic\VerkiezingssoortRepository.cs" />
+    <Compile Include="Logic\VerkiezingsuitslagRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Logic\" />
+    <ProjectReference Include="..\Models\Models.csproj">
+      <Project>{f97d6caa-d808-4b16-a335-0eb97b13e318}</Project>
+      <Name>Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

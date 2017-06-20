@@ -15,12 +15,13 @@ namespace Models
 
         public Lid(int id, string naam)
         {
-
+            Id = id;
+            Naam = naam;
         }
 
         public Lid(string naam)
         {
-
+            Naam = naam;
         }
     }
 }

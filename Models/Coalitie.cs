@@ -8,22 +8,31 @@ namespace Models
 {
     public class Coalitie
     {
-        public int Id;
+        public int Id, PremierId;
         public string Naam;
-        public Lid Premier;
         public List<Partij> Partijen = new List<Partij>();
 
         public Coalitie() { }
 
-        public Coalitie(int id, string naam, Lid premier, List<Partij> partijen)
+        public Coalitie(int id, string naam, int premier, List<Partij> partijen)
         {
-
+            Id = id;
+            Naam = naam;
+            PremierId = premier;
+            Partijen = partijen;
         }
 
-        public Coalitie(string naam, Lid premier, List<Partij> partijen)
+        public Coalitie(string naam, int premier, List<Partij> partijen)
         {
-
+            Naam = naam;
+            PremierId = premier;
+            Partijen = partijen;
         }
 
+        public void BepaalPremier()
+        {
+            var descendingOrder = Partijen.OrderByDescending(i => i);
+            PremierId = Partijen[0].LijsttrekkerId;
+        }
     }
 }

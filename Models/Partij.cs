@@ -8,20 +8,29 @@ namespace Models
 {
     public class Partij
     {
-        public int Id, Stemmen, Percentage, NieuweZetels;
+        public int Id, Stemmen, Percentage, NieuweZetels, LijsttrekkerId, Zetels;
         public string Afkorting, Naam;
         public List<Lid> Leden = new List<Lid>();
 
         public Partij() { }
 
-        public Partij(int id, string afkorting, string naam, int lijsttrekkerID, List<Lid> leden)
+        public Partij(int id, string afkorting, string naam, int lijsttrekkerID, int zetels, List<Lid> leden)
         {
+            Id = id;
+            Afkorting = afkorting;
+            Naam = naam;
+            LijsttrekkerId = lijsttrekkerID;
+            Zetels = zetels;
+            Leden = leden;
+    }
 
-        }
-
-        public Partij(string afkorting, string naam, int lijsttrekkerID, List<Lid> leden)
+        public Partij(string afkorting, string naam, int lijsttrekkerID, int zetels, List<Lid> leden)
         {
-           
+            Afkorting = afkorting;
+            Naam = naam;
+            LijsttrekkerId = lijsttrekkerID;
+            Zetels = zetels;
+            Leden = leden;
         }
     }
 }
