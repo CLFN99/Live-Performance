@@ -164,6 +164,7 @@
             this.btnCalcCoalition.Text = "Meerderheid berekenen";
             this.btnCalcCoalition.UseVisualStyleBackColor = true;
             this.btnCalcCoalition.Visible = false;
+            this.btnCalcCoalition.Click += new System.EventHandler(this.btnCalcCoalition_Click);
             // 
             // listView
             // 

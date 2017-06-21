@@ -18,10 +18,13 @@ namespace Live_Performance
         private Partij partij;
         private LidRepository lidRepo;
         private List<Lid> leden;
+        private PartijRepository partijRepo;
+
         public Party(Partij p)
         {
             InitializeComponent();
             lidRepo = new LidRepository(new LidSqlContext());
+            partijRepo = new PartijRepository(new PartijSqlContext());
             leden = lidRepo.GetAll();
             partij = p;
             lblPartyName.Text = partij.Naam;
@@ -34,6 +37,24 @@ namespace Live_Performance
                 }
             }
             lblSeats.Text = lblSeats.Text + partij.Zetels.ToString();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ChangePartyName cpn = new ChangePartyName(partij);
+            cpn.ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string warning = "Weet u zeker dat u deze partij wilt verwijderen? U zult dan ook alle verkiezingen en coalieties waarin de partij heeft deelgenomen verwijderen";
+            DialogResult dialogResult = MessageBox.Show(warning, "Waarschuwing",  MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
+            {
+                partijRepo.Delete(partij);
+            }
+            else if (dialogResult == DialogResult.No){}
+            
         }
     }
 }

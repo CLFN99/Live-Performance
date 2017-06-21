@@ -70,11 +70,85 @@ namespace Live_Performance
             newElection.ShowDialog();
         }
 
-        
+        private void btnViewParty_Click(object sender, EventArgs e)
+        {
+            leden = lidRepo.GetAll();
+            partijen = partijRepo.GetAll();
+            if(listView.CheckedItems.Count > 1)
+            {
+                MessageBox.Show("U kunt maar één partij selecteren om te bekijken");
+            }
+            else
+            {
+                Party pForm = new Party(CreatePartijFromLv()[0]);
+                pForm.ShowDialog();
+            }
+            
+        }
+
+
+        private void btnCalcCoalition_Click(object sender, EventArgs e)
+        {
+            if(listView.CheckedItems.Count == 1)
+            {
+                MessageBox.Show("Selecteer meerdere partijen om de meerderheid te berekenen.");
+            }
+            else
+            {
+                List<Partij> coalitiePartijen = CreatePartijFromLv();
+                CalcMeerderheid(coalitiePartijen);
+            }
+        }
+
 
         
 
         //methods
+        private void CalcMeerderheid(List<Partij> coalitiePartijen)
+        {
+            int totalSeats = 0;
+            foreach(Partij p in coalitiePartijen)
+            {
+                totalSeats = totalSeats + p.Zetels;
+            }
+            if(totalSeats >= 75)
+            {
+                MessageBox.Show("Meerderheid bereikt!");
+            }
+            else if (totalSeats < 75)
+            {
+                MessageBox.Show("Met deze partijen is geen meerderheid te bereiken.");
+            }
+        }
+
+        private List<Partij> CreatePartijFromLv()
+        {
+            List<Partij> selectedPartijen = new List<Partij>();
+            foreach (ListViewItem item in listView.CheckedItems)
+            {
+                Partij partij = new Partij();
+                partij.Afkorting = item.Text;
+                partij.Naam = item.SubItems[1].Text.ToString();
+                foreach (Lid l in leden)
+                {
+                    if (l.Naam == item.SubItems[2].Text.ToString())
+                    {
+                        partij.LijsttrekkerId = l.Id;
+                    }
+                }
+                partij.Zetels = Convert.ToInt32(item.SubItems[3].Text);
+                foreach (Partij p in partijen)
+                {
+                    if (p.Afkorting == partij.Afkorting)
+                    {
+                        partij.Id = p.Id;
+                    }
+                }
+                selectedPartijen.Add(partij);
+            }
+            return selectedPartijen;
+        }
+
         private void AddCoalitionsToLv()
         {
             listView.Items.Clear();
@@ -128,36 +202,6 @@ namespace Live_Performance
             }
         }
 
-        private void btnViewParty_Click(object sender, EventArgs e)
-        {
-            leden = lidRepo.GetAll();
-            partijen = partijRepo.GetAll();
-            Partij partij = new Partij();
-
-            foreach (ListViewItem item in listView.CheckedItems)
-            {
-                
-                partij.Afkorting = item.Text;
-                partij.Naam = item.SubItems[1].Text.ToString();
-                foreach(Lid l in leden)
-                {
-                    if(l.Naam == item.SubItems[2].Text.ToString())
-                    {
-                        partij.LijsttrekkerId = l.Id;
-                    }
-                }
-                partij.Zetels = Convert.ToInt32(item.SubItems[3].Text);
-            }
-
-            foreach(Partij p in partijen)
-            {
-                if(p.Afkorting == partij.Afkorting)
-                {
-                    partij.Id = p.Id;
-                }
-            }
-            Party pForm = new Party(partij);
-            pForm.ShowDialog();
-        }
+      
     }
 }
