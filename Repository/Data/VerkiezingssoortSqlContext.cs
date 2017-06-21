@@ -53,7 +53,7 @@ namespace Repository.Data
         {
             try
             {
-                Database.Conn.Open();
+               // Database.Conn.Open();
 
                 string queryCoalitie = "SELECT s.VerkiezingssoortID, p.PartijID,P.Afkorting,P.Naam,P.Zetels, P.LijsttrekkerID FROM Verkiezingssoort S INNER JOIN Verkiezingssoort_Partij SP ON S.VerkiezingssoortID = SP.VerkiezingssoortID INNER JOIN Partij P ON P.PartijID = SP.PartijID";
                 using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))

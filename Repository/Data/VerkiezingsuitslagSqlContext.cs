@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Models;
 using System.Data.SqlClient;
 using Repository.Logic;
+using System.Data;
 
 namespace Repository.Data
 {
@@ -168,16 +169,36 @@ namespace Repository.Data
                     cmd.ExecuteNonQuery();
                 }
 
-                string queryVP = "INSERT INTO Verkiezingsuitslag_Partij (VerkiezingsuitslagID, PartijID, Stemmen, Percentage, Zetels) VALUES (@@IDENTITY, @partij, @stemmen, @percentage, @zetels)";
+                string queryId = "SELECT VerkiezingsuitslagID FROM Verkiezingsuitslag WHERE VerkiezingsuitslagID = @@IDENTITY";
+                int id = 0;
+                using (SqlCommand cmd = new SqlCommand(queryId, Database.Conn))
+                {
+                    using(SqlDataReader r = cmd.ExecuteReader())
+                    {
+                        while (r.Read())
+                        {
+                            id = Convert.ToInt32(r["VerkiezingsuitslagID"]);
+                        }
+                    }
+                    cmd.ExecuteNonQuery();
+                }
+                string queryVP = "INSERT INTO Verkiezingsuitslag_Partij (VerkiezingsuitslagID, PartijID, Stemmen, Percentage, Zetels) VALUES (@id, @partij, @stemmen, @percentage, @zetels)";
                 using (SqlCommand cmd = new SqlCommand(queryVP, Database.Conn))
                 {
+                    //cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add("@partij", SqlDbType.Int);
+                    cmd.Parameters.Add("@stemmen", SqlDbType.Int);
+                    cmd.Parameters.Add("@percentage", SqlDbType.Decimal);
+                    cmd.Parameters.Add("@zetels", SqlDbType.Int);
+                    cmd.Parameters.AddWithValue("@id", id);
                     foreach (Partij p in s.Partijen)
                     {
-                        cmd.Parameters.AddWithValue("@partij", p.Id);
-                        cmd.Parameters.AddWithValue("@stemmen", p.Stemmen);
-                        cmd.Parameters.AddWithValue("@percentage", p.Percentage);
-                        cmd.Parameters.AddWithValue("@zetels", p.NieuweZetels);
+                        cmd.Parameters["@partij"].Value = p.Id;
+                        cmd.Parameters["@stemmen"].Value = p.Stemmen;
+                        cmd.Parameters["@percentage"].Value = p.Percentage;
+                        cmd.Parameters["@zetels"].Value = p.Zetels;
                         cmd.ExecuteNonQuery();
+                        //cmd.Parameters.Clear();
                     }
                 }
                 return true;
