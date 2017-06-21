@@ -11,27 +11,30 @@ namespace Repository.Data
 {
     public class VerkiezingssoortSqlContext : IVerkiezingssoortSqlContext
     {
-        private PartijRepository partijRepo = new PartijRepository(new PartijSqlContext());
+        //private PartijRepository partijRepo = new PartijRepository(new PartijSqlContext());
 
         public List<Verkiezingssoort> GetAll()
         {
             List<Verkiezingssoort> soorten = new List<Verkiezingssoort>();
-            List<Partij> partijen = partijRepo.GetAll();
 
             try
             {
                 Database.Conn.Open();
                 
-                string queryCoalitie = "SELECT * FROM Verkiezingssoort S INNER JOIN Verkiezingssoort_Partij SP ON S.VerkiezingssoortID = SP.VerkiezingssoortID INNER JOIN Partij P ON P.PartijID = SP.PartijID";
+                string queryCoalitie = "SELECT * FROM Verkiezingssoort";
                 using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))
                 {
                     using (SqlDataReader r = cmd.ExecuteReader())
                     {
                         while (r.Read())
                         {
-                            soorten.Add(CreateSoortFromReader(r, partijen));
+                            soorten.Add(CreateSoortFromReader(r));
                         }
                     }
+                }
+                foreach(Verkiezingssoort s in soorten)
+                {
+                    GetParties(s);
                 }
                 return soorten;
             }
@@ -45,14 +48,45 @@ namespace Repository.Data
                 Database.Conn.Close();
             }
         }
+
+        public List<Partij> GetParties(Verkiezingssoort soort)
+        {
+            try
+            {
+                Database.Conn.Open();
+
+                string queryCoalitie = "SELECT s.VerkiezingssoortID, p.PartijID,P.Afkorting,P.Naam,P.Zetels, P.LijsttrekkerID FROM Verkiezingssoort S INNER JOIN Verkiezingssoort_Partij SP ON S.VerkiezingssoortID = SP.VerkiezingssoortID INNER JOIN Partij P ON P.PartijID = SP.PartijID";
+                using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))
+                {
+                    using (SqlDataReader r = cmd.ExecuteReader())
+                    {
+                        while (r.Read())
+                        {
+                            soort.Partijen.Add(CreatePartijFromReader(r));
+                        }
+                    }
+                }
+                return soort.Partijen;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                return null;
+            }
+            finally
+            {
+                Database.Conn.Close();
+            }
+        }
+
         public Verkiezingssoort GetById(int id)
         {
-            List<Partij> partijen = partijRepo.GetAll();
+            //List<Partij> partijen = partijRepo.GetAll();
 
             try
             {
                 Database.Conn.Open();
-                string queryCoalitie = "SELECT * FROM Verkiezingssoort S INNER JOIN Verkiezingssoort_Partij SP ON S.VerkiezingssoortID = SP.VerkiezingssoortID INNER JOIN Partij P ON P.PartijID = SP.PartijID WHERE S.VerkiezingssoortID = @id";
+                string queryCoalitie = "SELECT * FROM Verkiezingssoort WHERE VerkiezingssoortID = @id";
                 using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))
                 {
                     using (SqlDataReader r = cmd.ExecuteReader())
@@ -60,7 +94,7 @@ namespace Repository.Data
                         cmd.Parameters.AddWithValue("@id", id);
                         while (r.Read())
                         {
-                            return CreateSoortFromReader(r, partijen);
+                            return CreateSoortFromReader(r);
                         }
                     }
                 }
@@ -111,19 +145,24 @@ namespace Repository.Data
                 Database.Conn.Close();
             }
         }
-
-        private Verkiezingssoort CreateSoortFromReader(SqlDataReader r, List<Partij> partijen)
+        private Partij CreatePartijFromReader(SqlDataReader r)
         {
-            List<Partij> soortPartijen = new List<Partij>();
-            foreach(Partij p in partijen)
-            {
-                if(p.Id == Convert.ToInt32(r["PartijID"]))
-                {
-                    soortPartijen.Add(p);
-                }
-            }
+            return new Partij(Convert.ToInt32(r["PartijID"]), r["Afkorting"].ToString(), r["Naam"].ToString(),
+                                Convert.ToInt32(r["Zetels"]), Convert.ToInt32(r["LijsttrekkerID"]));
+        }
+
+        private Verkiezingssoort CreateSoortFromReader(SqlDataReader r)
+        {
+            //List<Partij> soortPartijen = new List<Partij>();
+            //foreach(Partij p in partijen)
+            //{
+            //    if(p.Id == Convert.ToInt32(r["PartijID"]))
+            //    {
+            //        soortPartijen.Add(p);
+            //    }
+            //}
             return new Verkiezingssoort(Convert.ToInt32(r["VerkiezingssoortID"]), r["Naam"].ToString(),
-                                        Convert.ToInt32(r["Zetels"]), soortPartijen);
+                                        Convert.ToInt32(r["Zetels"]));
         }
 
     }

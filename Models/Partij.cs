@@ -8,8 +8,9 @@ namespace Models
 {
     public class Partij
     {
-        public int Id, Stemmen, Percentage, NieuweZetels, LijsttrekkerId, Zetels;
+        public int Id, Stemmen,  NieuweZetels, LijsttrekkerId, Zetels;
         public string Afkorting, Naam;
+        public double Percentage;
         public List<Lid> Leden = new List<Lid>();
 
         public Partij() { }

@@ -34,5 +34,10 @@ namespace Repository.Logic
         {
             return context.Update(s);
         }
+
+        public void GetPartyElectionResults(Verkiezingsuitslag u)
+        {
+           context.GetPartyElectionResults(u);
+        }
     }
 }

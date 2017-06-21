@@ -29,5 +29,10 @@ namespace Repository.Logic
         {
             return context.New(s);
         }
+
+        public List<Partij> GetParties(Verkiezingssoort soort)
+        {
+            return context.GetParties(soort);
+        }
     }
 }

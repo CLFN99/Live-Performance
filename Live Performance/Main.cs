@@ -23,6 +23,8 @@ namespace Live_Performance
         private List<Verkiezingsuitslag> uitslagen;
         private CoalitieRepository coalitieRepo;
         private List<Coalitie> coalities;
+        private VerkiezingssoortRepository soortRepo;
+        private List<Verkiezingssoort> soorten;
 
         public Main()
         {
@@ -31,6 +33,7 @@ namespace Live_Performance
             lidRepo = new LidRepository(new LidSqlContext());
             uitslagRepo = new VerkiezingsuitslagRepository(new VerkiezingsuitslagSqlContext());
             coalitieRepo = new CoalitieRepository(new CoalitieSqlContext());
+            soortRepo = new VerkiezingssoortRepository(new VerkiezingssoortSqlContext());
         }
 
         private void btnPartyList_Click(object sender, EventArgs e)
@@ -38,36 +41,47 @@ namespace Live_Performance
             btnCalcCoalition.Visible = true;
             btnNewParty.Visible = true;
             btnViewParty.Visible = true;
+            btnExportCoalition.Visible = false;
+            btnViewElection.Visible = false;
+            listView.Columns.Clear();
             listView.Columns.Add("Partij", 60, HorizontalAlignment.Left);
             listView.Columns.Add("Volledige naam", 250, HorizontalAlignment.Left);
             listView.Columns.Add("Lijsttrekker", 150, HorizontalAlignment.Left);
             listView.Columns.Add("Zetels", 50, HorizontalAlignment.Left);
-            listView.CheckBoxes = true;
             AddPartiesToLv();
         }
         
         private void btnElectionList_Click(object sender, EventArgs e)
         {
-            lblInfo.Visible = true;
-            listView.Columns.Add("Naam", - 2, HorizontalAlignment.Left);
-            listView.Columns.Add("Datum", -2, HorizontalAlignment.Left);
-            listView.Columns.Add("Soort", -2, HorizontalAlignment.Left);
+            btnViewElection.Visible = true;
+            btnExportCoalition.Visible = false;
+            btnCalcCoalition.Visible = false;
+            btnNewParty.Visible = false;
+            btnViewParty.Visible = false;
+            listView.Columns.Clear();
+            listView.Columns.Add("Naam", 150, HorizontalAlignment.Left);
+            listView.Columns.Add("Datum", 100, HorizontalAlignment.Left);
+            listView.Columns.Add("Soort", 200, HorizontalAlignment.Left);
             AddElectionsToLv();
         }
         
         private void btnCoalitionList_Click(object sender, EventArgs e)
         {
             btnExportCoalition.Visible = true;
+            btnCalcCoalition.Visible = false;
+            btnNewParty.Visible = false;
+            btnViewParty.Visible = false;
+            btnViewElection.Visible = false;
+            listView.Columns.Clear();
             listView.Columns.Add("Naam");
             listView.Columns.Add("Premier");
-            listView.CheckBoxes = true;
             AddCoalitionsToLv();
         }
 
         private void btnNewElection_Click(object sender, EventArgs e)
         {
-            NewElection newElection = new NewElection();
-            newElection.ShowDialog();
+            NewElection ne = new NewElection();
+            ne.ShowDialog();
         }
 
         private void btnViewParty_Click(object sender, EventArgs e)
@@ -78,44 +92,90 @@ namespace Live_Performance
             {
                 MessageBox.Show("U kunt maar één partij selecteren om te bekijken");
             }
-            else
+            else if (listView.CheckedItems.Count != 0)
             {
                 Party pForm = new Party(CreatePartijFromLv()[0]);
                 pForm.ShowDialog();
             }
             
         }
-
-
+        
         private void btnCalcCoalition_Click(object sender, EventArgs e)
         {
-            if(listView.CheckedItems.Count == 1)
+            if(listView.CheckedItems.Count <= 1)
             {
                 MessageBox.Show("Selecteer meerdere partijen om de meerderheid te berekenen.");
             }
-            else
+            else if(listView.CheckedItems.Count != 0)
             {
                 List<Partij> coalitiePartijen = CreatePartijFromLv();
                 CalcMeerderheid(coalitiePartijen);
             }
         }
 
+        private void btnViewElection_Click(object sender, EventArgs e)
+        {
 
-        
+            uitslagen = uitslagRepo.GetAll();
+            if (listView.CheckedItems.Count > 1)
+            {
+                MessageBox.Show("U kunt maar één partij selecteren om te bekijken");
+            }
+            else if (listView.CheckedItems.Count != 0)
+            {
+                Election election = new Election(CreateUitslagFromLv());
+                election.ShowDialog();
+            }
+
+        }
+
 
         //methods
+
+        private Verkiezingsuitslag CreateUitslagFromLv()
+        {
+            Verkiezingsuitslag selectedUitslag = new Verkiezingsuitslag();
+            foreach (ListViewItem item in listView.CheckedItems)
+            {
+                foreach(Verkiezingsuitslag u in uitslagen)
+                {
+                    if(u.Id == (item.Index + 1))
+                    {
+                        selectedUitslag = u;
+                    }
+                }
+                return selectedUitslag;
+            }
+            return null;
+        }
+
         private void CalcMeerderheid(List<Partij> coalitiePartijen)
         {
+            soorten = soortRepo.GetAll();
+            double i = 0;
+            foreach(Verkiezingssoort soort in soorten)
+            {
+               // soort.Partijen = soortRepo.GetParties(soort);
+                foreach(Partij p in coalitiePartijen)
+                {
+                    if (!soort.Partijen.Contains(p))
+                    {
+                        i = soort.Zetels / 2;
+                    }
+                }
+            }
+            
             int totalSeats = 0;
+            
             foreach(Partij p in coalitiePartijen)
             {
                 totalSeats = totalSeats + p.Zetels;
             }
-            if(totalSeats >= 75)
+            if(totalSeats > Math.Ceiling(i))
             {
-                MessageBox.Show("Meerderheid bereikt!");
+                MessageBox.Show("Meerderheid bereikt!" + Math.Ceiling(i).ToString());
             }
-            else if (totalSeats < 75)
+            else if (totalSeats <= Math.Ceiling(i))
             {
                 MessageBox.Show("Met deze partijen is geen meerderheid te bereiken.");
             }
@@ -164,6 +224,7 @@ namespace Live_Performance
                     parties = parties + p.Afkorting + ", ";
                 }
                 item.SubItems.Add(parties);
+                listView.Items.Add(item);
             }
         }
 
@@ -201,7 +262,5 @@ namespace Live_Performance
                 listView.Items.Add(item);
             }
         }
-
-      
     }
 }

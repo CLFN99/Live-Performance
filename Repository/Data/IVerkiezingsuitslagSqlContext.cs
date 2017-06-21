@@ -13,5 +13,7 @@ namespace Repository.Data
         Verkiezingsuitslag GetById(int id);
         bool New(Verkiezingsuitslag s);
         bool Update(Verkiezingsuitslag s);
+        List<Partij> GetParties(Verkiezingsuitslag u);
+        void GetPartyElectionResults(Verkiezingsuitslag u);
     }
 }

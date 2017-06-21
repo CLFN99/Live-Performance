@@ -11,6 +11,7 @@ namespace Repository.Data
     {
         List<Verkiezingssoort> GetAll();
         Verkiezingssoort GetById(int id);
+        List<Partij> GetParties(Verkiezingssoort soort);
         bool New(Verkiezingssoort s);
     }
 }

@@ -34,12 +34,12 @@
             this.btnElectionList = new System.Windows.Forms.Button();
             this.navPanel = new System.Windows.Forms.Panel();
             this.listPanel = new System.Windows.Forms.Panel();
-            this.lblInfo = new System.Windows.Forms.Label();
             this.btnExportCoalition = new System.Windows.Forms.Button();
             this.btnNewParty = new System.Windows.Forms.Button();
             this.btnCalcCoalition = new System.Windows.Forms.Button();
             this.listView = new System.Windows.Forms.ListView();
             this.btnViewParty = new System.Windows.Forms.Button();
+            this.btnViewElection = new System.Windows.Forms.Button();
             this.navPanel.SuspendLayout();
             this.listPanel.SuspendLayout();
             this.SuspendLayout();
@@ -114,8 +114,8 @@
             // 
             // listPanel
             // 
+            this.listPanel.Controls.Add(this.btnViewElection);
             this.listPanel.Controls.Add(this.btnViewParty);
-            this.listPanel.Controls.Add(this.lblInfo);
             this.listPanel.Controls.Add(this.btnExportCoalition);
             this.listPanel.Controls.Add(this.btnNewParty);
             this.listPanel.Controls.Add(this.btnCalcCoalition);
@@ -124,16 +124,6 @@
             this.listPanel.Name = "listPanel";
             this.listPanel.Size = new System.Drawing.Size(724, 589);
             this.listPanel.TabIndex = 6;
-            // 
-            // lblInfo
-            // 
-            this.lblInfo.AutoSize = true;
-            this.lblInfo.Location = new System.Drawing.Point(12, 541);
-            this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(375, 17);
-            this.lblInfo.TabIndex = 4;
-            this.lblInfo.Text = "Dubbelklik op een verkiezingsuitslag voor meer informatie.";
-            this.lblInfo.Visible = false;
             // 
             // btnExportCoalition
             // 
@@ -168,6 +158,7 @@
             // 
             // listView
             // 
+            this.listView.CheckBoxes = true;
             this.listView.GridLines = true;
             this.listView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listView.HideSelection = false;
@@ -190,6 +181,17 @@
             this.btnViewParty.Visible = false;
             this.btnViewParty.Click += new System.EventHandler(this.btnViewParty_Click);
             // 
+            // btnViewElection
+            // 
+            this.btnViewElection.Location = new System.Drawing.Point(576, 522);
+            this.btnViewElection.Name = "btnViewElection";
+            this.btnViewElection.Size = new System.Drawing.Size(127, 55);
+            this.btnViewElection.TabIndex = 6;
+            this.btnViewElection.Text = "Uitslag bekijken";
+            this.btnViewElection.UseVisualStyleBackColor = true;
+            this.btnViewElection.Visible = false;
+            this.btnViewElection.Click += new System.EventHandler(this.btnViewElection_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -202,7 +204,6 @@
             this.Text = "Main";
             this.navPanel.ResumeLayout(false);
             this.listPanel.ResumeLayout(false);
-            this.listPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -217,10 +218,10 @@
         private System.Windows.Forms.Panel listPanel;
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.Button btnNewParty;
-        private System.Windows.Forms.Label lblInfo;
         private System.Windows.Forms.Button btnExportCoalition;
         private System.Windows.Forms.Button btnCalcCoalition;
         private System.Windows.Forms.Button btnViewParty;
+        private System.Windows.Forms.Button btnViewElection;
     }
 }
 
