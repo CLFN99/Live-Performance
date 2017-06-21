@@ -37,11 +37,20 @@ namespace Repository.Data
                     {
                         while (r.Read())
                         {
-                            partijen.Add(CreatePartijFromReader(r, leden));
+                            partijen.Add(CreatePartijFromReader(r));
                         }
                     }
                 }
-                
+                foreach (Partij p in partijen)
+                {
+                    foreach (Lid l in leden)
+                    {
+                        if (l.PartijId == p.Id)
+                        {
+                            p.Leden.Add(l);
+                        }
+                    }
+                }
                 return partijen;
             }
             catch (Exception e)
@@ -58,7 +67,7 @@ namespace Repository.Data
         public Partij GetById(int id)
         {
             List<Lid> leden = new List<Lid>();
-
+            Partij p = new Partij();
             try
             {
                 Database.Conn.Open();
@@ -83,9 +92,13 @@ namespace Repository.Data
                     {
                         while (r.Read())
                         {
-                            return CreatePartijFromReader(r, leden);
+                            p =  CreatePartijFromReader(r);
                         }
                     }
+                }
+                foreach(Lid l in leden)
+                {
+                    p.Leden.Add(l);
                 }
                 
             }
@@ -159,10 +172,10 @@ namespace Repository.Data
             try
             {
                 Database.Conn.Open();
-                string query = "DELETE FROM Lid WHERE LidID = @id";
+                string query = "DELETE FROM Partij WHERE PartijID = @id";
                 using (SqlCommand cmd = new SqlCommand(query, Database.Conn))
                 {
-                    cmd.Parameters.AddWithValue("@id", l.ID);
+                    cmd.Parameters.AddWithValue("@id", p.Id);
                     cmd.ExecuteNonQuery();
                     return true;
                 }
@@ -183,10 +196,10 @@ namespace Repository.Data
             return new Lid(Convert.ToInt32(r["LidID"]), r["Naam"].ToString(), Convert.ToInt32(r["PartijID"]));
         }
 
-        private Partij CreatePartijFromReader(SqlDataReader r, List<Lid> leden)
+        private Partij CreatePartijFromReader(SqlDataReader r)
         {
             return new Partij(Convert.ToInt32(r["PartijID"]), r["Afkorting"].ToString(), r["Naam"].ToString(),
-                                Convert.ToInt32(r["Zetels"]), Convert.ToInt32(r["LijsttrekkerID"]), leden);
+                                Convert.ToInt32(r["Zetels"]), Convert.ToInt32(r["LijsttrekkerID"]));
         }
     }
 }

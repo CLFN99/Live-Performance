@@ -14,23 +14,21 @@ namespace Models
 
         public Partij() { }
 
-        public Partij(int id, string afkorting, string naam, int lijsttrekkerID, int zetels, List<Lid> leden)
+        public Partij(int id, string afkorting, string naam, int zetels, int lijsttrekkerID)
         {
             Id = id;
             Afkorting = afkorting;
             Naam = naam;
             LijsttrekkerId = lijsttrekkerID;
             Zetels = zetels;
-            Leden = leden;
     }
 
-        public Partij(string afkorting, string naam, int lijsttrekkerID, int zetels, List<Lid> leden)
+        public Partij(string afkorting, string naam, int zetels, int lijsttrekkerID)
         {
             Afkorting = afkorting;
             Naam = naam;
             LijsttrekkerId = lijsttrekkerID;
             Zetels = zetels;
-            Leden = leden;
         }
     }
 }

@@ -5,55 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using Models;
 using System.Data.SqlClient;
+using Repository.Logic;
 
 namespace Repository.Data
 {
     public class VerkiezingssoortSqlContext : IVerkiezingssoortSqlContext
     {
+        private PartijRepository partijRepo = new PartijRepository(new PartijSqlContext());
+
         public List<Verkiezingssoort> GetAll()
         {
             List<Verkiezingssoort> soorten = new List<Verkiezingssoort>();
-            List<Lid> leden = new List<Lid>();
-            List<Partij> partijen = new List<Partij>();
+            List<Partij> partijen = partijRepo.GetAll();
 
             try
             {
                 Database.Conn.Open();
-                string queryLid = "SELECT * FROM Lid";
-                using (SqlCommand cmd = new SqlCommand(queryLid, Database.Conn))
-                {
-                    using (SqlDataReader r = cmd.ExecuteReader())
-                    {
-                        while (r.Read())
-                        {
-                            leden.Add(CreateLidFromReader(r));
-                        }
-                    }
-                }
-
-                string queryPartij = "SELECT * FROM Partij";
-                using (SqlCommand cmd = new SqlCommand(queryPartij, Database.Conn))
-                {
-                    using (SqlDataReader r = cmd.ExecuteReader())
-                    {
-                        while (r.Read())
-                        {
-                            partijen.Add(CreatePartijFromReader(r, leden));
-                        }
-                    }
-                }
-
-                foreach(Partij p in partijen)
-                {
-                    foreach (Lid l in leden)
-                    {
-                        if (l.PartijId == p.Id)
-                        {
-                            p.Leden.Add(l);
-                        }
-                    }
-                }
-
+                
                 string queryCoalitie = "SELECT * FROM Verkiezingssoort S INNER JOIN Verkiezingssoort_Partij SP ON S.VerkiezingssoortID = SP.VerkiezingssoortID INNER JOIN Partij P ON P.PartijID = SP.PartijID";
                 using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))
                 {
@@ -79,38 +47,11 @@ namespace Repository.Data
         }
         public Verkiezingssoort GetById(int id)
         {
-            List<Lid> leden = new List<Lid>();
-            List<Partij> partijen = new List<Partij>();
+            List<Partij> partijen = partijRepo.GetAll();
 
             try
             {
                 Database.Conn.Open();
-                string queryLid = "SELECT * FROM Lid WHERE PartijID = @id";
-                using (SqlCommand cmd = new SqlCommand(queryLid, Database.Conn))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    using (SqlDataReader r = cmd.ExecuteReader())
-                    {
-                        while (r.Read())
-                        {
-                            leden.Add(CreateLidFromReader(r));
-                        }
-                    }
-                }
-
-                string queryPartij = "SELECT * FROM Partij WHERE PartijID = @id";
-                using (SqlCommand cmd = new SqlCommand(queryPartij, Database.Conn))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    using (SqlDataReader r = cmd.ExecuteReader())
-                    {
-                        while (r.Read())
-                        {
-                            partijen.Add(CreatePartijFromReader(r, leden));
-                        }
-                    }
-                }
-
                 string queryCoalitie = "SELECT * FROM Verkiezingssoort S INNER JOIN Verkiezingssoort_Partij SP ON S.VerkiezingssoortID = SP.VerkiezingssoortID INNER JOIN Partij P ON P.PartijID = SP.PartijID WHERE S.VerkiezingssoortID = @id";
                 using (SqlCommand cmd = new SqlCommand(queryCoalitie, Database.Conn))
                 {
@@ -185,15 +126,5 @@ namespace Repository.Data
                                         Convert.ToInt32(r["Zetels"]), soortPartijen);
         }
 
-        private Lid CreateLidFromReader(SqlDataReader r)
-        {
-            return new Lid(Convert.ToInt32(r["LidID"]), r["Naam"].ToString(), Convert.ToInt32(r["PartijID"]));
-        }
-
-        private Partij CreatePartijFromReader(SqlDataReader r, List<Lid> leden)
-        {
-            return new Partij(Convert.ToInt32(r["PartijID"]), r["Afkorting"].ToString(), r["Naam"].ToString(),
-                                Convert.ToInt32(r["Zetels"]), Convert.ToInt32(r["LijsttrekkerID"]), leden);
-        }
     }
 }

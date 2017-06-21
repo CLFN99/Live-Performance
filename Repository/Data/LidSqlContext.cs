@@ -104,7 +104,7 @@ namespace Repository.Data
                 string query = "DELETE FROM Lid WHERE LidID = @id";
                 using (SqlCommand cmd = new SqlCommand(query, Database.Conn))
                 {
-                    cmd.Parameters.AddWithValue("@id", l.ID);
+                    cmd.Parameters.AddWithValue("@id", l.Id);
                     cmd.ExecuteNonQuery();
                     return true;
                 }

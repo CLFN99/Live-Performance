@@ -15,22 +15,20 @@ namespace Models
         public List<Partij> Partijen = new List<Partij>();
 
         public Verkiezingsuitslag() { }
-        public Verkiezingsuitslag(int id, string naam, DateTime datum, Verkiezingssoort soort, int totaal, List<Partij> partijen)
+        public Verkiezingsuitslag(int id, string naam, DateTime datum, Verkiezingssoort soort, List<Partij> partijen)
         {
             Id = id;
             Naam = naam;
             Datum = datum;
             Soort = soort;
-            Totaal = totaal;
             Partijen = partijen;
         }
 
-        public Verkiezingsuitslag(string naam, DateTime datum, Verkiezingssoort soort, int totaal, List<Partij> partijen)
+        public Verkiezingsuitslag(string naam, DateTime datum, Verkiezingssoort soort, List<Partij> partijen)
         {
             Naam = naam;
             Datum = datum;
             Soort = soort;
-            Totaal = totaal;
             Partijen = partijen;
         }
 

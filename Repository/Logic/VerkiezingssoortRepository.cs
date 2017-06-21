@@ -19,7 +19,7 @@ namespace Repository.Logic
 
         public List<Verkiezingssoort> GetAll()
         {
-            return context.GetAll()
+            return context.GetAll();
         }
         public Verkiezingssoort GetById(int id)
         {
