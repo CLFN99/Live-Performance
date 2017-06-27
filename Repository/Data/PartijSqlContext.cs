@@ -172,9 +172,10 @@ namespace Repository.Data
             try
             {
                 Database.Conn.Open();
-                string query = "DELETE FROM Partij WHERE PartijID = @id";
-                using (SqlCommand cmd = new SqlCommand(query, Database.Conn))
+              //  string query = "DELETE FROM Partij WHERE PartijID = @id";
+                using (SqlCommand cmd = new SqlCommand("DeleteParty", Database.Conn))
                 {
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@id", p.Id);
                     cmd.ExecuteNonQuery();
                     return true;

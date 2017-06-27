@@ -14,13 +14,23 @@ namespace UnitTests
         [TestMethod]
         public void TestNewCoaliton()
         {
-            Verkiezingsuitslag v = new Verkiezingsuitslag("TestVerkiezing", DateTime.Now, TestSoort());
+            DateTime date = DateTime.Now;
+            Verkiezingsuitslag v = new Verkiezingsuitslag("TestVerkiezing", date, TestSoort());
+            v.ZetelsEnPercentageBerekenen();
+            foreach(Partij p in v.Partijen)
+            {
+                Assert.AreEqual(8, p.NieuweZetels);
+                Assert.AreEqual(32, p.Percentage);
+            }
         }
 
         private Verkiezingssoort TestSoort()
         {
-            Verkiezingssoort v  = new Verkiezingssoort(2, "Test Verkiezing", 25);
-            v.Partijen = TestParties();
+            Verkiezingssoort v = new Verkiezingssoort(2, "Test Verkiezing", 25)
+            {
+                Partijen = TestParties()
+            };
+            return v;
         }
 
         private List<Partij> TestParties()
@@ -33,7 +43,6 @@ namespace UnitTests
             {
                 p.Stemmen = 300;
             }
-
             return partijen;
         }
     }

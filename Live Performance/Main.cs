@@ -173,7 +173,7 @@ namespace Live_Performance
             }
             if(totalSeats > Math.Ceiling(i))
             {
-                MessageBox.Show("Meerderheid bereikt!" + Math.Ceiling(i).ToString());
+                MessageBox.Show("Meerderheid bereikt!");
             }
             else if (totalSeats <= Math.Ceiling(i))
             {

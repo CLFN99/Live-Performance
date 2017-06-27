@@ -34,7 +34,7 @@ namespace Models
         {
             foreach(Partij p in Partijen)
             {
-                p.NieuweZetels = p.Stemmen / (Totaal * Soort.Zetels);
+                p.NieuweZetels = (p.Stemmen / Totaal) * Soort.Zetels;
                 p.Percentage = (p.NieuweZetels / Soort.Zetels) * 100;
             }
         }
